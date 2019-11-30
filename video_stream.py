@@ -72,7 +72,7 @@ if __name__ == '__main__':
         
 
         fps.update()
-        cv2.imshow('camera',frame)
+        # cv2.imshow('camera',frame)
 
         key = cv2.waitKey(1)
         if key == 'q':
