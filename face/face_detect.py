@@ -32,7 +32,7 @@ class _FaceDetector():
             boxes.append(pred)
         return boxes
     
-    def crop(self,image,box):
+    def crop4inf(self,image,box):
         height,width = image.shape[:2]
         print(image.shape)
         x0,y0,x1,y1 = box
@@ -49,18 +49,24 @@ class _FaceDetector():
         # # print([x0,y0,x1,y1])
         #     return image[y0:y1,x0:x1]
 
-    def crop4restore(self,image,box,scale = 1.1):
+    def crop4restore(self,image,box,scale = 1.1,pixel = 200):
         heigh,width = image.shape[:2]
         x0,y0,x1,y1 = box
+        longer = max((x1 - x0),(y1 - y0))
+        xc = int((x0 + x1) / 2)
+        yc = int((y0 + y1) / 2)
+        longer_half = int(longer/2)
+        x0_s = xc - longer_half
+        x1_s = xc + longer_half
+        y0_s = yc - longer_half
+        y1_s = yc + longer_half
+        
+        image_cropped = image[max(0,y0_s):min(y1_s,height),\
+            max(0,x0_s):min(width,x1_s)]
 
-        def _isoutside(v,w):
-            if v < 0 or v > w:
-                return True
-            return False
 
-        if _isoutside(x0,width) or _isoutside(x1,width) or _isoutside(y0,height) or _isoutside(y1,height):
-            return None
-        return image[y0:y1,x0:x1]
+        
+        return cv2.resize(image_cropped,(pixel,pixel))
 
 
         

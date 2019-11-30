@@ -6,16 +6,15 @@ import numpy as np
 
 from face import FaceDetector
 from smile import SmileDetector
-from imutils.video import VideoStream,FPS
+from imutils.video import VideoStream,FPS,pivideostream
 
 def norm_image(x):
     return x / 127.5 - 1
 
 if __name__ == '__main__':
     cwd = os.path.dirname(__file__)
-    
     detector_1 = FaceDetector(0.8)
-    vs = VideoStream(src=0).start()
+    vs = VideoStream(src=0,usePiCamera=True,resolution = (1280,960)).start()
     time.sleep(1)
     fps = FPS().start()
 
@@ -41,7 +40,7 @@ if __name__ == '__main__':
             confidence = face[0]
             tlx,tly,brx,bry = face[1:].astype('int32')
             print([tlx,tly,brx,bry])
-            face_image = detector_1.crop(frame,[tlx,tly,brx,bry])
+            face_image = detector_1.crop4inf(frame,[tlx,tly,brx,bry])
             print(face_image.shape)
             face_image = cv2.resize(face_image,(100,100))
             gray = cv2.cvtColor(face_image,cv2.COLOR_RGB2GRAY)
@@ -72,7 +71,7 @@ if __name__ == '__main__':
         
 
         fps.update()
-        # cv2.imshow('camera',frame)
+        cv2.imshow('camera',frame)
 
         key = cv2.waitKey(1)
         if key == 'q':
