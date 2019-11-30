@@ -3,10 +3,20 @@ import cv2
 import tensorflow as tf
 import time
 import numpy as np
+import argparse
 
 from face import FaceDetector
 from smile import SmileDetector
-from imutils.video import VideoStream,FPS,pivideostream
+from imutils.video import VideoStream,FPS
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-r','--res',default = (480,640))
+parser.add_argument('-w','--camerawindow',default = False)
+parser.add_argument('-pi','--picamera',default = False)
+args = parser.parse_args()
+
+if args.picamera:
+    from imutils.video import pivideostream
 
 def norm_image(x):
     return x / 127.5 - 1
@@ -14,7 +24,7 @@ def norm_image(x):
 if __name__ == '__main__':
     cwd = os.path.dirname(__file__)
     detector_1 = FaceDetector(0.8)
-    vs = VideoStream(src=0,usePiCamera=True,resolution = (1280,960)).start()
+    vs = VideoStream(src=0,usePiCamera=args.picamera,resolution = args.res).start()
     time.sleep(1)
     fps = FPS().start()
 
@@ -71,7 +81,8 @@ if __name__ == '__main__':
         
 
         fps.update()
-        cv2.imshow('camera',frame)
+        if args.camerawindow:
+            cv2.imshow('camera',frame)
 
         key = cv2.waitKey(1)
         if key == 'q':
