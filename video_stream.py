@@ -12,14 +12,15 @@ def norm_image(x):
     return x / 127.5 - 1
 
 if __name__ == '__main__':
-
+    cwd = os.path.dirname(__file__)
+    
     detector_1 = FaceDetector(0.8)
     vs = VideoStream(src=0).start()
     time.sleep(1)
     fps = FPS().start()
 
     detector_2 = SmileDetector()
-    detector_2.weights_load('smile\minivgg_weights.h5')
+    detector_2.weights_load(os.path.join(cwd,'smile','minivgg_weights.h5'))
 
     labels = ['calm','smile']
 
