@@ -19,7 +19,7 @@ cwd = os.path.dirname(__file__)
 net.weights_load(os.path.join(cwd,'smile','minivgg_weights.h5'))
 threshold = .5
 
-host = 'http://10.13.7.97:8000/'
+host = 'http://ethan-mac.local:8000/'
 
 
 def find_anchors():
@@ -63,7 +63,7 @@ def upload_smiles():
     t2 = datetime.now()
     print("\n[info] face detection takes {}, {} faces detected".format(t2 - t1, len(faces)))
     if not len(faces):
-        return
+        return frame,None,None
     feed = []
     for i, face in enumerate(faces):
         tlx, tly, brx, bry = face[1:].astype('int32')
@@ -106,10 +106,17 @@ def upload_smiles():
     t2 = datetime.now()
     print("[info] smiles API takes {}".format(t2 - t1))
     print(response.content)
+    return frame,faces,scores
 
+def draw_box(frame,faces):
+    if faces is None:
+        return 
+    for i, face in enumerate(faces):    
+        tlx, tly, brx, bry = face[1:].astype('int32')
+        cv2.rectangle(frame, (tlx, tly), (brx, bry), color=(0, 0, 255), thickness=2)
+        # cv2.putText(frame, res[i], (tlx + 10, bry + 10), cv2.FONT_HERSHEY_SIMPLEX, .5, color=(0, 0, 255))
+        # cv2.putText(frame, "{:.2f}%".format(float(scores[i]) * 100), (tlx + 10, bry - 10), cv2.FONT_HERSHEY_SIMPLEX, .5, color=(0, 0, 255))
     
-
-    return faces,frame,scores
 
 
 def main_loop():
@@ -128,13 +135,9 @@ def main_loop():
         if elapsed < (1. / FPS_value):
             continue
         tick = datetime.now()
-        faces,frame,scores = upload_smiles()
+        frame,faces,scores = upload_smiles()
         if args.camerawindow:
-            for i, face in enumerate(faces):    
-                tlx, tly, brx, bry = face[1:].astype('int32')
-                cv2.rectangle(frame, (tlx, tly), (brx, bry), color=(0, 0, 255), thickness=2)
-                # cv2.putText(frame, res[i], (tlx + 10, bry + 10), cv2.FONT_HERSHEY_SIMPLEX, .5, color=(0, 0, 255))
-                # cv2.putText(frame, "{:.2f}%".format(float(scores[i]) * 100), (tlx + 10, bry - 10), cv2.FONT_HERSHEY_SIMPLEX, .5, color=(0, 0, 255))
+            draw_box(frame,faces)
             cv2.imshow('camera',frame)
             key = cv2.waitKey(1) & 0xff
             if key == ord('q'):
