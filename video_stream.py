@@ -19,7 +19,7 @@ cwd = os.path.dirname(__file__)
 net.weights_load(os.path.join(cwd,'smile','minivgg_weights.h5'))
 threshold = .5
 
-host = 'http://ethan-mac.local:8000/'
+host = 'https://back-smaile.weminusplus.com/'
 
 
 def find_anchors():
