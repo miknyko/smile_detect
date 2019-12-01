@@ -13,17 +13,16 @@ from smile import SmileDetector
 
 FPS_value = 0.5
 vs = cv2.VideoCapture(0)
-vs.set(3,1024)
-vs.set(4,768)
+vs.set(3,1920)
+vs.set(4,1080)
 face_detector = FaceDetector(.9)
 net = SmileDetector()
 cwd = os.path.dirname(__file__)
 net.weights_load(os.path.join(cwd,'smile','minivgg_weights.h5'))
 threshold = .5
 
-host = 'https://back-smaile.weminusplus.com/'
-# host = "http://10.13.7.97:8000/"
-
+# host = 'https://back-smaile.weminusplus.com/'
+host = "http://10.13.7.97:8000/"
 
 
 def norm_image(x):
@@ -32,7 +31,7 @@ def norm_image(x):
 def find_anchors():
     while True:
         _,frame = vs.read()
-        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         faces = face_detector.detect(frame)
         key = input('{} faces detected, press `q` to quit finding anchors, otherwise press any key to start over.'.format(len(faces)))
         if key == 'q' or key == 'Q':
@@ -65,7 +64,7 @@ def find_anchors():
 
 def upload_smiles():
     _,frame= vs.read()
-    # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     # frame = cv2.imread('face/test.jpg')
     t1 = datetime.now()
     faces = face_detector.detect(frame)
@@ -90,9 +89,6 @@ def upload_smiles():
     print("[info] smile assessment takes {}, {} smiles found".format(t2 - t1, len(smile_faces)))
     smile_scores = scores[is_smile]
     assert len(smile_faces) == len(smile_scores)
-
-    if len(smile_faces) == 0:
-        return frame,faces,scores
 
     smile_list = []
     for i in range(len(smile_faces)):
