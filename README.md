@@ -1,5 +1,5 @@
 # 笑容检测
-Detecting the simle face in a video stream (your own camera) 
+Detecting the simle face in a video stream (your own camera)  
 使用opencv中预训练好的res10网络侦测视频流中的人脸，再使用笑容检测器侦测笑容。  
 笑脸检测器为一个Minivgg，训练数据来源于网络自整理，效果不错。
 视频结束有一个得分，使用简单算法告诉你整个过程的快乐值
