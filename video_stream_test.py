@@ -11,7 +11,7 @@ from imutils.video import VideoStream,FPS
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-r','--res',default = 1)
-parser.add_argument('-w','--camerawindow',default = False)
+parser.add_argument('-w','--camerawindow',default = True)
 parser.add_argument('-pi','--picamera',default = False)
 args = parser.parse_args()
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
             confidence = face[0]
             tlx,tly,brx,bry = face[1:].astype('int32')
             print([tlx,tly,brx,bry])
-            face_image = detector_1.crop4inf(frame,[tlx,tly,brx,bry])
+            face_image = detector_1.crop(frame,[tlx,tly,brx,bry])
             print(face_image.shape)
             face_image = cv2.resize(face_image,(100,100))
             gray = cv2.cvtColor(face_image,cv2.COLOR_RGB2GRAY)
